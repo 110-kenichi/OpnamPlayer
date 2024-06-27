@@ -495,11 +495,25 @@ namespace zanac.VGMPlayer
             {
                 dirStack.Clear();
 
-                stopCurrentSong();
-                sendCmd("reset fm", 1);
+                try
+                {
+                    stopCurrentSong();
+                    sendCmd("reset fm", 1);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
 
-                serialPort.Close();
-                serialPort.Dispose();
+                try
+                {
+                    serialPort.Close();
+                    serialPort.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 serialPort = null;
                 buttonConnect.Text = "&Connect";
                 listViewList.Items.Clear();
