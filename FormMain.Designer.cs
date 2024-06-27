@@ -47,6 +47,8 @@ namespace zanac.VGMPlayer
             comboBoxOpnaClock = new ComboBox();
             label1 = new Label();
             label2 = new Label();
+            label4 = new Label();
+            comboBoxLight = new ComboBox();
             labelPort = new Label();
             comboBoxSerial = new ComboBox();
             buttonConnect = new Button();
@@ -240,8 +242,10 @@ namespace zanac.VGMPlayer
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnCount = 4;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 88F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
@@ -249,15 +253,17 @@ namespace zanac.VGMPlayer
             tableLayoutPanel3.Controls.Add(comboBoxOpnaClock, 1, 1);
             tableLayoutPanel3.Controls.Add(label1, 0, 0);
             tableLayoutPanel3.Controls.Add(label2, 0, 1);
+            tableLayoutPanel3.Controls.Add(label4, 2, 0);
+            tableLayoutPanel3.Controls.Add(comboBoxLight, 3, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(610, 3);
+            tableLayoutPanel3.Location = new Point(500, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 3;
             tableLayoutPanelButton.SetRowSpan(tableLayoutPanel3, 2);
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel3.Size = new Size(174, 82);
+            tableLayoutPanel3.Size = new Size(284, 82);
             tableLayoutPanel3.TabIndex = 4;
             // 
             // comboBoxOpmClock
@@ -303,6 +309,28 @@ namespace zanac.VGMPlayer
             label2.TabIndex = 2;
             label2.Text = "OP&NA Clock:";
             label2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Dock = DockStyle.Fill;
+            label4.Location = new Point(177, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(34, 29);
+            label4.TabIndex = 4;
+            label4.Text = "&Light";
+            label4.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // comboBoxLight
+            // 
+            comboBoxLight.Dock = DockStyle.Fill;
+            comboBoxLight.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxLight.FormattingEnabled = true;
+            comboBoxLight.Items.AddRange(new object[] { "Off", "On" });
+            comboBoxLight.Location = new Point(217, 3);
+            comboBoxLight.Name = "comboBoxLight";
+            comboBoxLight.Size = new Size(64, 23);
+            comboBoxLight.TabIndex = 5;
             // 
             // labelPort
             // 
@@ -391,7 +419,6 @@ namespace zanac.VGMPlayer
             // 
             toolStripStatusLabel.Name = "toolStripStatusLabel";
             toolStripStatusLabel.Size = new Size(0, 17);
-            toolStripStatusLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // columnHeaderFile
             // 
@@ -503,7 +530,7 @@ namespace zanac.VGMPlayer
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FormMain";
-            Text = "OPNAM Player V1.0";
+            Text = "OPNAM Player V1.1";
             KeyDown += FormMain_KeyDown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -540,7 +567,6 @@ namespace zanac.VGMPlayer
         private System.Windows.Forms.TextBox textBoxTitle;
         private System.Windows.Forms.ToolStripMenuItem aBOUTToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolTip toolTip1;
         private ListView listViewList;
         private Label labelPort;
@@ -559,5 +585,8 @@ namespace zanac.VGMPlayer
         private Label label2;
         private Label label3;
         private NumericUpDown numericUpDownTimeout;
+        private Label label4;
+        private ToolStripStatusLabel toolStripStatusLabel;
+        private ComboBox comboBoxLight;
     }
 }

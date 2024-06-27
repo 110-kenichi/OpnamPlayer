@@ -70,5 +70,17 @@ namespace OPNAMPlayer {
                 this["Timeout"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int Light {
+            get {
+                return ((int)(this["Light"]));
+            }
+            set {
+                this["Light"] = value;
+            }
+        }
     }
 }

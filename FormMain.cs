@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.Mime.MediaTypeNames;
+using static System.Windows.Forms.LinkLabel;
 
 namespace zanac.VGMPlayer
 {
@@ -51,6 +52,7 @@ namespace zanac.VGMPlayer
             base.OnClosed(e);
 
             stopCurrentSong();
+            sendCmd("reset fm", 1);
 
             serialPort?.Dispose();
 
@@ -129,6 +131,8 @@ namespace zanac.VGMPlayer
             comboBoxOpmClock.SelectedIndex = Settings.Default.OpmClock;
             comboBoxOpnaClock.SelectedIndex = Settings.Default.OpnaClock;
 
+            comboBoxLight.SelectedIndex = Settings.Default.Light;
+
             numericUpDownTimeout.Value = Settings.Default.Timeout;
         }
 
@@ -146,6 +150,8 @@ namespace zanac.VGMPlayer
 
             Settings.Default.OpmClock = comboBoxOpmClock.SelectedIndex;
             Settings.Default.OpnaClock = comboBoxOpnaClock.SelectedIndex;
+
+            Settings.Default.Light = comboBoxLight.SelectedIndex;
 
             Settings.Default.Timeout = numericUpDownTimeout.Value;
         }
@@ -303,11 +309,22 @@ namespace zanac.VGMPlayer
                     default:
                         return;
                 }
+                setLight();
                 sendCmd("play " + fileName, 1);
                 setOpmClock();
                 setOpnaClock();
 
-                textBoxTitle.Text = fileName;
+                string[] dirs = new string[dirStack.Count];
+                dirStack.CopyTo(dirs, 0);
+                StringBuilder fullpath = new StringBuilder();
+                foreach (string dir in dirs.Reverse())
+                {
+                    fullpath.Append(dir);
+                    fullpath.Append(Path.DirectorySeparatorChar);
+                }
+                fullpath.Append(fileName);
+
+                textBoxTitle.Text = fullpath.ToString();
             }
             catch (Exception ex)
             {
@@ -457,6 +474,7 @@ namespace zanac.VGMPlayer
 
                         sendCmd("sd init", 1);
                         string line2 = serialPort.ReadLine();
+                        setStatusText(line2);
                         if (!line2.Equals("sd initialized"))
                             return;
 
@@ -476,6 +494,9 @@ namespace zanac.VGMPlayer
             else
             {
                 dirStack.Clear();
+
+                stopCurrentSong();
+                sendCmd("reset fm", 1);
 
                 serialPort.Close();
                 serialPort.Dispose();
@@ -616,12 +637,30 @@ namespace zanac.VGMPlayer
         /// <param name="dummyReads"></param>
         private List<String> sendCmd(string cmd, int dummyReads)
         {
+            setStatusText(String.Empty);
             List<String> returns = new List<string>();
             if (serialPort != null)
             {
                 serialPort.WriteLine(cmd);
                 for (int i = 0; i < dummyReads; i++)
-                    returns.Add(serialPort.ReadLine());
+                {
+                    int tryCount = 3;
+                    for (int j = 0; j < tryCount; j++)
+                    {
+                        try
+                        {
+                            String line = serialPort.ReadLine();
+                            setStatusText(line);
+                            returns.Add(line);
+                            break;
+                        }
+                        catch (TimeoutException ex)
+                        {
+                            if (j + 1 == tryCount)
+                                throw ex;
+                        }
+                    }
+                }
             }
             return returns;
         }
@@ -659,6 +698,23 @@ namespace zanac.VGMPlayer
                     break;
             }
 
+        }
+
+        private void setLight()
+        {
+            switch (comboBoxLight.SelectedIndex)
+            {
+                case 0:
+                    //sendCmd("led off", 1);
+                    sendCmd("lcd light off", 1);
+                    sendCmd("oled off", 1);
+                    break;
+                case 1:
+                    //sendCmd("led on", 1);
+                    sendCmd("lcd light on", 1);
+                    sendCmd("oled on", 1);
+                    break;
+            }
         }
     }
 
