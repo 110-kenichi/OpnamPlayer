@@ -394,6 +394,12 @@ namespace zanac.VGMPlayer
                 ch.Text = ch.Text.Replace(" ▼", "").Replace(" ▲", "");
             string cn = listViewList.Columns[e.Column].Text;
 
+            ListViewIndexComparer c = listViewList.ListViewItemSorter as ListViewIndexComparer;
+            if (c == null)
+                listViewList.ListViewItemSorter = new ListViewIndexComparer(listViewList);
+            c = listViewList.ListViewItemSorter as ListViewIndexComparer;
+            c.SortColumn = e.Column;
+
             switch (listViewList.Sorting)
             {
                 case SortOrder.Ascending:
@@ -420,6 +426,12 @@ namespace zanac.VGMPlayer
         /// </summary>
         private class ListViewIndexComparer : System.Collections.IComparer
         {
+            public int SortColumn
+            {
+                get;
+                set;
+            }
+
             private ListView listView;
 
             public ListViewIndexComparer(ListView listView)
@@ -429,12 +441,29 @@ namespace zanac.VGMPlayer
 
             public int Compare(object x, object y)
             {
-                if (listView.Sorting == SortOrder.Ascending)
-                    return ((ListViewItem)x).Text.CompareTo(((ListViewItem)y).Text);
-                else if (listView.Sorting == SortOrder.Descending)
-                    return ((ListViewItem)y).Text.CompareTo(((ListViewItem)x).Text);
-                else
-                    return 0;
+                int xv;
+                if (int.TryParse(((ListViewItem)x).SubItems[SortColumn].Text, out xv))
+                {
+                    int yv;
+                    if (int.TryParse(((ListViewItem)y).SubItems[SortColumn].Text, out yv))
+                    {
+                        if (listView.Sorting == SortOrder.Ascending)
+                            return xv - yv;
+                        else if (listView.Sorting == SortOrder.Descending)
+                            return yv - xv;
+                        else
+                            return 0;
+                    }
+                }
+
+                {
+                    if (listView.Sorting == SortOrder.Ascending)
+                        return ((ListViewItem)x).SubItems[SortColumn].Text.CompareTo(((ListViewItem)y).SubItems[SortColumn].Text);
+                    else if (listView.Sorting == SortOrder.Descending)
+                        return ((ListViewItem)y).SubItems[SortColumn].Text.CompareTo(((ListViewItem)x).SubItems[SortColumn].Text);
+                    else
+                        return 0;
+                }
             }
         }
 
