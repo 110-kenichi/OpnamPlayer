@@ -134,6 +134,18 @@ namespace zanac.VGMPlayer
             comboBoxLight.SelectedIndex = Settings.Default.Light;
 
             numericUpDownTimeout.Value = Settings.Default.Timeout;
+
+            checkBoxLoop.Checked = Settings.Default.Loop;
+            numericUpDownLooped.Value = Settings.Default.LoopCount;
+
+            checkBoxTimer.Checked = Settings.Default.LoopTime;
+            try
+            {
+                dateTimePickerLoopTimes.Value = Settings.Default.LoopTimes;
+            }
+            catch { }
+
+            checkBoxEnterDir.Checked = Settings.Default.EnterDir;
         }
 
         /// <summary>
@@ -154,6 +166,14 @@ namespace zanac.VGMPlayer
             Settings.Default.Light = comboBoxLight.SelectedIndex;
 
             Settings.Default.Timeout = numericUpDownTimeout.Value;
+
+            Settings.Default.Loop = checkBoxLoop.Checked;
+            Settings.Default.LoopCount = numericUpDownLooped.Value;
+
+            Settings.Default.LoopTime = checkBoxTimer.Checked;
+            Settings.Default.LoopTimes = dateTimePickerLoopTimes.Value;
+
+            Settings.Default.EnterDir = checkBoxEnterDir.Checked;
         }
 
         /// <summary>
@@ -191,14 +211,19 @@ namespace zanac.VGMPlayer
                 idx = currentSongItem.Index;
             if (idx < 0 && listViewList.Items.Count != 0)
             {
-                playItem(0);
+                var item = listViewList.Items[0];
+                item.Selected = true;
+                playSelectedItem(checkBoxEnterDir.Checked);
             }
             else
             {
                 idx--;
                 if (idx < 0)
                     idx = listViewList.Items.Count - 1;
-                playItem(idx);
+
+                var item = listViewList.Items[idx];
+                item.Selected = true;
+                playSelectedItem(checkBoxEnterDir.Checked);
             }
         }
 
@@ -214,14 +239,19 @@ namespace zanac.VGMPlayer
                 idx = currentSongItem.Index;
             if (idx < 0 && listViewList.Items.Count != 0)
             {
-                playItem(0);
+                var item = listViewList.Items[0];
+                item.Selected = true;
+                playSelectedItem(checkBoxEnterDir.Checked);
             }
             else
             {
                 idx++;
                 if (idx >= listViewList.Items.Count)
                     idx = 0;
-                playItem(idx);
+
+                var item = listViewList.Items[idx];
+                item.Selected = true;
+                playSelectedItem(checkBoxEnterDir.Checked);
             }
         }
 
@@ -272,7 +302,7 @@ namespace zanac.VGMPlayer
         /// 
         /// </summary>
         /// <param name="idx"></param>
-        private void playItem(int idx)
+        private void playItem2(int idx)
         {
             if (idx >= listViewList.Items.Count)
                 idx = listViewList.Items.Count - 1;
@@ -309,6 +339,7 @@ namespace zanac.VGMPlayer
                     default:
                         return;
                 }
+                stopTimer();
                 setLight();
                 sendCmd("play " + fileName, 1);
                 setOpmClock();
@@ -325,11 +356,24 @@ namespace zanac.VGMPlayer
                 fullpath.Append(fileName);
 
                 textBoxTitle.Text = fullpath.ToString();
+                startTimer();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private int loopCount;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void startTimer()
+        {
+            loopCount = 0;
+            toolStripStatusLabelElapse.Text = "00:00";
+            timer1.Start();
         }
 
         /// <summary>
@@ -342,11 +386,22 @@ namespace zanac.VGMPlayer
             try
             {
                 sendCmd("stop", 1);
+                stopTimer();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void stopTimer()
+        {
+            timer1.Stop();
+            toolStripStatusLabelElapse.Text = "00:00";
+            loopCount = 0;
         }
 
         private void listViewList_KeyDown(object sender, KeyEventArgs e)
@@ -665,6 +720,7 @@ namespace zanac.VGMPlayer
         {
             try
             {
+                buttonStop_Click(null, null);
                 sendCmd("reset fm", 1);
             }
             catch (Exception ex)
@@ -678,33 +734,45 @@ namespace zanac.VGMPlayer
         /// </summary>
         /// <param name="cmd"></param>
         /// <param name="dummyReads"></param>
-        private List<String> sendCmd(string cmd, int dummyReads)
+        private List<String> sendCmd(string cmd, int readLineCount, bool outputRetvalue = true)
         {
-            setStatusText(String.Empty);
+            if (outputRetvalue)
+                setStatusText(String.Empty);
             List<String> returns = new List<string>();
             if (serialPort != null)
             {
                 serialPort.WriteLine(cmd);
-                for (int i = 0; i < dummyReads; i++)
+                returns.AddRange(readLines(readLineCount, outputRetvalue));
+            }
+            return returns;
+        }
+
+        private List<String> readLines(int readLineCount, bool outputRetvalue)
+        {
+            List<String> returns = new List<string>();
+
+            for (int i = 0; i < readLineCount; i++)
+            {
+                int tryCount = 3;
+                for (int j = 0; j < tryCount; j++)
                 {
-                    int tryCount = 3;
-                    for (int j = 0; j < tryCount; j++)
+                    try
                     {
-                        try
-                        {
-                            String line = serialPort.ReadLine();
+                        String line = serialPort.ReadLine();
+                        if (outputRetvalue)
                             setStatusText(line);
-                            returns.Add(line);
-                            break;
-                        }
-                        catch (TimeoutException ex)
-                        {
-                            if (j + 1 == tryCount)
-                                throw ex;
-                        }
+                        returns.Add(line);
+                        break;
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        Thread.Sleep(300);
+                        if (j + 1 == tryCount)
+                            throw ex;
                     }
                 }
             }
+
             return returns;
         }
 
@@ -757,6 +825,51 @@ namespace zanac.VGMPlayer
                     sendCmd("lcd light on", 1);
                     sendCmd("oled on", 1);
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                var returns = sendCmd("play", 2, false);
+                if (returns.Count == 2)
+                {
+                    if (returns[1].Equals("playing..."))
+                    {
+                        returns = readLines(2, false);
+                        if (returns.Count == 2)
+                        {
+                            toolStripStatusLabelElapse.Text = returns[1];
+
+                            if (checkBoxTimer.Checked)
+                            {
+                                try
+                                {
+                                    TimeSpan elapsed = TimeSpan.Parse(toolStripStatusLabelElapse.Text);
+                                    if (elapsed > TimeSpan.Parse(dateTimePickerLoopTimes.Text))
+                                    {
+                                        buttonNext_Click(null, null);
+                                    }
+                                }
+                                catch { };
+                            }
+                        }
+                    }
+                    else if (returns[1].Equals("Not playing"))
+                    {
+                        buttonNext_Click(null, null);
+                    }
+                }
+            }
+            catch (TimeoutException ex)
+            {
+
             }
         }
     }

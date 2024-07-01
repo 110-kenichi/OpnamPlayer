@@ -61,14 +61,14 @@
     <value>17, 17</value>
   </metadata>
   <metadata name="imageListSmall.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>329, 18</value>
+    <value>253, 17</value>
   </metadata>
   <data name="imageListSmall.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAEZTeXN0ZW0uV2luZG93cy5Gb3JtcywgQ3VsdHVyZT1uZXV0cmFs
         LCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5BQEAAAAmU3lzdGVtLldpbmRvd3MuRm9ybXMu
         SW1hZ2VMaXN0U3RyZWFtZXIBAAAABERhdGEHAgIAAAAJAwAAAA8DAAAA/mUAAAJNU0Z0AUkBTAIBAQoB
-        AAEoARYBKAEWASABAAEgAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABgAMAAWADAAEBAQABIAYAAcDC
+        AAF4ARgBeAEYASABAAEgAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoAwABgAMAAWADAAEBAQABIAYAAcDC
         AAN5Af8DWwH/AU0BTAFNAf8DSwH/AU0BTAFNAf8DWQH/A3cB/wOiAf//ANUAA3MB/wNMAf8DSwH/A0sB
         /wNLAf8DSwH/A0sB/wNLAf8DSwH/A0sB/wNLAf8DSwH/A20B//8AxQADfgH/A0sB/wNLAf8DSwH/A08B
         /wN0Af8DmgH/DAACmgGbAf8DeAH/A1AB/wNLAf8DSwH/A0sB/wN5Af//ALkAA1sB/wNLAf8DSwH/A1oB
@@ -506,17 +506,17 @@
 </value>
   </data>
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>925, 18</value>
+    <value>502, 17</value>
   </metadata>
   <metadata name="imageListBig.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>219, 18</value>
+    <value>132, 17</value>
   </metadata>
   <data name="imageListBig.ImageStream" mimetype="application/x-microsoft.net.object.binary.base64">
     <value>
         AAEAAAD/////AQAAAAAAAAAMAgAAAEZTeXN0ZW0uV2luZG93cy5Gb3JtcywgQ3VsdHVyZT1uZXV0cmFs
         LCBQdWJsaWNLZXlUb2tlbj1iNzdhNWM1NjE5MzRlMDg5BQEAAAAmU3lzdGVtLldpbmRvd3MuRm9ybXMu
         SW1hZ2VMaXN0U3RyZWFtZXIBAAAABERhdGEHAgIAAAAJAwAAAA8DAAAAemkAAAJNU0Z0AUkBTAIBAQIB
-        AAEoARYBKAEWAUABAAFAAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoBAABAQIAAUADAAEBAQABIAcAAQFl
+        AAF4ARgBeAEYAUABAAFAAQAE/wEhAQAI/wFCAU0BNgcAATYDAAEoBAABAQIAAUADAAEBAQABIAcAAQFl
         AAMGAQcDEgEXAxwBJwMlATYDPgFqA0cBgQNOAZgDVQGvA1sBxQNeAd0DYAHzA2AB8wNeAd0DWwHFA1UB
         rwNOAZgDRwGBAz4BagMlATYDHAEnAxIBFwMGAQeoAAMGAQcDEgEXAxwBJwMlATYDPgFqA0cBgQNOAZgD
         VQGvA1sBxQNeAd0DYAHzA2AB8wNeAd0DWwHFA1UBrwNOAZgDRwGBAz4BagMlATYDHAEnAxIBFwMGAQf/
@@ -969,7 +969,13 @@
 </value>
   </data>
   <metadata name="statusStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>788, 18</value>
+    <value>386, 17</value>
+  </metadata>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>583, 17</value>
+  </metadata>
+  <metadata name="$this.TrayLargeIcon" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

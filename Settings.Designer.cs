@@ -82,5 +82,65 @@ namespace OPNAMPlayer {
                 this["Light"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Loop {
+            get {
+                return ((bool)(this["Loop"]));
+            }
+            set {
+                this["Loop"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LoopTime {
+            get {
+                return ((bool)(this["LoopTime"]));
+            }
+            set {
+                this["LoopTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("01/01/1753 00:05:00")]
+        public global::System.DateTime LoopTimes {
+            get {
+                return ((global::System.DateTime)(this["LoopTimes"]));
+            }
+            set {
+                this["LoopTimes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public decimal LoopCount {
+            get {
+                return ((decimal)(this["LoopCount"]));
+            }
+            set {
+                this["LoopCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnterDir {
+            get {
+                return ((bool)(this["EnterDir"]));
+            }
+            set {
+                this["EnterDir"] = value;
+            }
+        }
     }
 }

@@ -49,6 +49,11 @@ namespace zanac.VGMPlayer
             label2 = new Label();
             label4 = new Label();
             comboBoxLight = new ComboBox();
+            checkBoxLoop = new CheckBox();
+            checkBoxTimer = new CheckBox();
+            dateTimePickerLoopTimes = new DateTimePicker();
+            numericUpDownLooped = new NumericUpDown();
+            checkBoxEnterDir = new CheckBox();
             labelPort = new Label();
             comboBoxSerial = new ComboBox();
             buttonConnect = new Button();
@@ -56,6 +61,7 @@ namespace zanac.VGMPlayer
             label7 = new Label();
             textBoxTitle = new TextBox();
             statusStrip1 = new StatusStrip();
+            toolStripStatusLabelElapse = new ToolStripStatusLabel();
             toolStripStatusLabel = new ToolStripStatusLabel();
             toolTip1 = new ToolTip(components);
             columnHeaderFile = new ColumnHeader();
@@ -68,9 +74,13 @@ namespace zanac.VGMPlayer
             buttonReset = new Button();
             label3 = new Label();
             numericUpDownTimeout = new NumericUpDown();
+            timer1 = new System.Windows.Forms.Timer(components);
+            toolStripStatusLabel2 = new ToolStripStatusLabel();
+            toolStripStatusLabelSpace = new ToolStripStatusLabel();
             menuStrip1.SuspendLayout();
             tableLayoutPanelButton.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownLooped).BeginInit();
             tableLayoutPanel2.SuspendLayout();
             statusStrip1.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -118,15 +128,20 @@ namespace zanac.VGMPlayer
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.Controls.Add(buttonPrev, 0, 0);
             tableLayoutPanelButton.Controls.Add(buttonPlay, 1, 0);
             tableLayoutPanelButton.Controls.Add(buttonStop, 3, 0);
             tableLayoutPanelButton.Controls.Add(buttonNext, 2, 0);
             tableLayoutPanelButton.Controls.Add(tableLayoutPanel3, 10, 0);
+            tableLayoutPanelButton.Controls.Add(checkBoxLoop, 8, 0);
+            tableLayoutPanelButton.Controls.Add(checkBoxTimer, 9, 0);
+            tableLayoutPanelButton.Controls.Add(dateTimePickerLoopTimes, 9, 1);
+            tableLayoutPanelButton.Controls.Add(numericUpDownLooped, 8, 1);
+            tableLayoutPanelButton.Controls.Add(checkBoxEnterDir, 2, 1);
             tableLayoutPanelButton.Dock = DockStyle.Bottom;
             tableLayoutPanelButton.Location = new Point(0, 701);
             tableLayoutPanelButton.Margin = new Padding(4);
@@ -332,6 +347,71 @@ namespace zanac.VGMPlayer
             comboBoxLight.Size = new Size(64, 23);
             comboBoxLight.TabIndex = 5;
             // 
+            // checkBoxLoop
+            // 
+            checkBoxLoop.AutoSize = true;
+            checkBoxLoop.Dock = DockStyle.Fill;
+            checkBoxLoop.ImageAlign = ContentAlignment.MiddleLeft;
+            checkBoxLoop.ImageKey = "Loop.png";
+            checkBoxLoop.ImageList = imageListSmall;
+            checkBoxLoop.Location = new Point(376, 3);
+            checkBoxLoop.Name = "checkBoxLoop";
+            checkBoxLoop.Size = new Size(56, 49);
+            checkBoxLoop.TabIndex = 5;
+            checkBoxLoop.TextAlign = ContentAlignment.BottomCenter;
+            checkBoxLoop.UseVisualStyleBackColor = true;
+            checkBoxLoop.Visible = false;
+            // 
+            // checkBoxTimer
+            // 
+            checkBoxTimer.AutoSize = true;
+            checkBoxTimer.Dock = DockStyle.Fill;
+            checkBoxTimer.ImageAlign = ContentAlignment.MiddleLeft;
+            checkBoxTimer.ImageKey = "Loop_Time.png";
+            checkBoxTimer.ImageList = imageListSmall;
+            checkBoxTimer.Location = new Point(438, 3);
+            checkBoxTimer.Name = "checkBoxTimer";
+            checkBoxTimer.Size = new Size(56, 49);
+            checkBoxTimer.TabIndex = 6;
+            checkBoxTimer.TextAlign = ContentAlignment.BottomCenter;
+            checkBoxTimer.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePickerLoopTimes
+            // 
+            dateTimePickerLoopTimes.CustomFormat = "mm:ss";
+            dateTimePickerLoopTimes.Format = DateTimePickerFormat.Custom;
+            dateTimePickerLoopTimes.Location = new Point(438, 58);
+            dateTimePickerLoopTimes.MaxDate = new DateTime(1753, 1, 1, 0, 59, 59, 0);
+            dateTimePickerLoopTimes.MinDate = new DateTime(1753, 1, 1, 0, 0, 5, 0);
+            dateTimePickerLoopTimes.Name = "dateTimePickerLoopTimes";
+            dateTimePickerLoopTimes.ShowUpDown = true;
+            dateTimePickerLoopTimes.Size = new Size(56, 23);
+            dateTimePickerLoopTimes.TabIndex = 7;
+            dateTimePickerLoopTimes.Value = new DateTime(1753, 1, 1, 0, 3, 0, 0);
+            // 
+            // numericUpDownLooped
+            // 
+            numericUpDownLooped.Dock = DockStyle.Fill;
+            numericUpDownLooped.Location = new Point(376, 58);
+            numericUpDownLooped.Minimum = new decimal(new int[] { 1, 0, 0, int.MinValue });
+            numericUpDownLooped.Name = "numericUpDownLooped";
+            numericUpDownLooped.Size = new Size(56, 23);
+            numericUpDownLooped.TabIndex = 8;
+            numericUpDownLooped.Value = new decimal(new int[] { 3, 0, 0, 0 });
+            numericUpDownLooped.Visible = false;
+            // 
+            // checkBoxEnterDir
+            // 
+            checkBoxEnterDir.AutoSize = true;
+            tableLayoutPanelButton.SetColumnSpan(checkBoxEnterDir, 2);
+            checkBoxEnterDir.Dock = DockStyle.Fill;
+            checkBoxEnterDir.Location = new Point(165, 58);
+            checkBoxEnterDir.Name = "checkBoxEnterDir";
+            checkBoxEnterDir.Size = new Size(86, 27);
+            checkBoxEnterDir.TabIndex = 9;
+            checkBoxEnterDir.Text = "Enter Dir";
+            checkBoxEnterDir.UseVisualStyleBackColor = true;
+            // 
             // labelPort
             // 
             labelPort.AutoSize = true;
@@ -407,13 +487,19 @@ namespace zanac.VGMPlayer
             // statusStrip1
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripStatusLabelSpace, toolStripStatusLabel2, toolStripStatusLabelElapse });
             statusStrip1.Location = new Point(0, 791);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new Padding(1, 0, 12, 0);
             statusStrip1.Size = new Size(787, 22);
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
+            // 
+            // toolStripStatusLabelElapse
+            // 
+            toolStripStatusLabelElapse.Name = "toolStripStatusLabelElapse";
+            toolStripStatusLabelElapse.Size = new Size(34, 17);
+            toolStripStatusLabelElapse.Text = "00:00";
             // 
             // toolStripStatusLabel
             // 
@@ -514,6 +600,23 @@ namespace zanac.VGMPlayer
             numericUpDownTimeout.TabIndex = 3;
             numericUpDownTimeout.Value = new decimal(new int[] { 300, 0, 0, 0 });
             // 
+            // timer1
+            // 
+            timer1.Interval = 1000;
+            timer1.Tick += timer1_Tick;
+            // 
+            // toolStripStatusLabel2
+            // 
+            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            toolStripStatusLabel2.Size = new Size(35, 17);
+            toolStripStatusLabel2.Text = "Time:";
+            // 
+            // toolStripStatusLabelSpace
+            // 
+            toolStripStatusLabelSpace.Name = "toolStripStatusLabelSpace";
+            toolStripStatusLabelSpace.Size = new Size(674, 17);
+            toolStripStatusLabelSpace.Spring = true;
+            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -530,7 +633,7 @@ namespace zanac.VGMPlayer
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FormMain";
-            Text = "OPNAM Player V1.3";
+            Text = "OPNAM Player V1.4";
             KeyDown += FormMain_KeyDown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -538,6 +641,7 @@ namespace zanac.VGMPlayer
             tableLayoutPanelButton.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)numericUpDownLooped).EndInit();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             statusStrip1.ResumeLayout(false);
@@ -588,5 +692,15 @@ namespace zanac.VGMPlayer
         private Label label4;
         private ToolStripStatusLabel toolStripStatusLabel;
         private ComboBox comboBoxLight;
+        private CheckBox checkBoxLoop;
+        private CheckBox checkBoxTimer;
+        private DateTimePicker dateTimePickerLoopTimes;
+        private NumericUpDown numericUpDownLooped;
+        private System.Windows.Forms.Timer timer1;
+        private ToolStripStatusLabel toolStripStatusLabelElapse;
+        private ToolStripStatusLabel toolStripStatusLabel1;
+        private CheckBox checkBoxEnterDir;
+        private ToolStripStatusLabel toolStripStatusLabelSpace;
+        private ToolStripStatusLabel toolStripStatusLabel2;
     }
 }
