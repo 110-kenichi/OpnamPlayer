@@ -61,8 +61,10 @@ namespace zanac.VGMPlayer
             label7 = new Label();
             textBoxTitle = new TextBox();
             statusStrip1 = new StatusStrip();
-            toolStripStatusLabelElapse = new ToolStripStatusLabel();
             toolStripStatusLabel = new ToolStripStatusLabel();
+            toolStripStatusLabelSpace = new ToolStripStatusLabel();
+            toolStripStatusLabel2 = new ToolStripStatusLabel();
+            toolStripStatusLabelElapse = new ToolStripStatusLabel();
             toolTip1 = new ToolTip(components);
             columnHeaderFile = new ColumnHeader();
             listViewList = new ListView();
@@ -75,8 +77,6 @@ namespace zanac.VGMPlayer
             label3 = new Label();
             numericUpDownTimeout = new NumericUpDown();
             timer1 = new System.Windows.Forms.Timer(components);
-            toolStripStatusLabel2 = new ToolStripStatusLabel();
-            toolStripStatusLabelSpace = new ToolStripStatusLabel();
             menuStrip1.SuspendLayout();
             tableLayoutPanelButton.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
@@ -495,16 +495,28 @@ namespace zanac.VGMPlayer
             statusStrip1.TabIndex = 5;
             statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripStatusLabel
+            // 
+            toolStripStatusLabel.Name = "toolStripStatusLabel";
+            toolStripStatusLabel.Size = new Size(0, 17);
+            // 
+            // toolStripStatusLabelSpace
+            // 
+            toolStripStatusLabelSpace.Name = "toolStripStatusLabelSpace";
+            toolStripStatusLabelSpace.Size = new Size(674, 17);
+            toolStripStatusLabelSpace.Spring = true;
+            // 
+            // toolStripStatusLabel2
+            // 
+            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
+            toolStripStatusLabel2.Size = new Size(35, 17);
+            toolStripStatusLabel2.Text = "Time:";
+            // 
             // toolStripStatusLabelElapse
             // 
             toolStripStatusLabelElapse.Name = "toolStripStatusLabelElapse";
             toolStripStatusLabelElapse.Size = new Size(34, 17);
             toolStripStatusLabelElapse.Text = "00:00";
-            // 
-            // toolStripStatusLabel
-            // 
-            toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(0, 17);
             // 
             // columnHeaderFile
             // 
@@ -605,18 +617,6 @@ namespace zanac.VGMPlayer
             timer1.Interval = 1000;
             timer1.Tick += timer1_Tick;
             // 
-            // toolStripStatusLabel2
-            // 
-            toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            toolStripStatusLabel2.Size = new Size(35, 17);
-            toolStripStatusLabel2.Text = "Time:";
-            // 
-            // toolStripStatusLabelSpace
-            // 
-            toolStripStatusLabelSpace.Name = "toolStripStatusLabelSpace";
-            toolStripStatusLabelSpace.Size = new Size(674, 17);
-            toolStripStatusLabelSpace.Spring = true;
-            // 
             // FormMain
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -698,7 +698,6 @@ namespace zanac.VGMPlayer
         private NumericUpDown numericUpDownLooped;
         private System.Windows.Forms.Timer timer1;
         private ToolStripStatusLabel toolStripStatusLabelElapse;
-        private ToolStripStatusLabel toolStripStatusLabel1;
         private CheckBox checkBoxEnterDir;
         private ToolStripStatusLabel toolStripStatusLabelSpace;
         private ToolStripStatusLabel toolStripStatusLabel2;

@@ -867,7 +867,7 @@ namespace zanac.VGMPlayer
                     }
                 }
             }
-            catch (TimeoutException ex)
+            catch (TimeoutException)
             {
 
             }
