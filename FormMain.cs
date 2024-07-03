@@ -19,7 +19,7 @@ using static System.Windows.Forms.LinkLabel;
 
 namespace zanac.VGMPlayer
 {
-    public partial class FormMain : Form
+    public partial class FormMain : Form, IMessageFilter
     {
         private SerialPort serialPort;
 
@@ -43,6 +43,13 @@ namespace zanac.VGMPlayer
             restoreSettings();
         }
 
+        protected override void OnCreateControl()
+        {
+            System.Windows.Forms.Application.AddMessageFilter(this);
+
+            base.OnCreateControl();
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -59,7 +66,7 @@ namespace zanac.VGMPlayer
             catch { }
             try
             {
-                serialPort?.Dispose();
+                storeCurrentDir();
                 serialPort?.Dispose();
             }
             catch { }
@@ -67,6 +74,10 @@ namespace zanac.VGMPlayer
             storeSettings();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m)
         {
             switch (m.Msg)
@@ -102,9 +113,70 @@ namespace zanac.VGMPlayer
                     }
             }
 
-            /* Other message handlers here… */
-
             base.WndProc(ref m);
+        }
+
+        private const int WM_XBUTTONDOWN = 0x020B;
+
+        public bool PreFilterMessage(ref Message m)
+        {
+            if (m.Msg == WM_XBUTTONDOWN)
+            {
+                var hword = (m.WParam & 0xffff0000) >> 16;
+
+                switch (hword)
+                {
+                    case 0x0001:    //Back
+                        try
+                        {
+                            var ret = sendCmd("cd ..", 1);
+
+                            String dir = null;
+                            if (dirStack.Count != 0)
+                            {
+                                dir = dirStack.Pop();
+                                if (!listingFiles(dir))
+                                    dirStack.Push(dir);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                        return true;
+                    case 0x0002:    //Forward
+                        if (currentSongItem != null)
+                        {
+                            currentSongItem.EnsureVisible();
+                            if (currentSongItem.SubItems[1].Text.Equals("<dir>"))
+                            {
+                                if (currentSongItem.SubItems[0].Text.Contains("?"))
+                                    break;
+
+                                if (!currentSongItem.Text.Equals(".."))
+                                {
+                                    try
+                                    {
+                                        sendCmd("cd " + currentSongItem.Text, 1);
+
+                                        dirStack.Push(currentSongItem.Text);
+
+                                        if (!listingFiles(null))
+                                        {
+                                            dirStack.Pop();
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        MessageBox.Show(ex.Message);
+                                    }
+                                }
+                            }
+                        }
+                        return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -284,7 +356,7 @@ namespace zanac.VGMPlayer
                         try
                         {
                             bool popped = false;
-                            var ret = sendCmd("cd " + item.Text, 1);
+                            sendCmd("cd " + item.Text, 1);
 
                             String dir = null;
                             if (item.Text.Equals(".."))
@@ -324,28 +396,6 @@ namespace zanac.VGMPlayer
                     playFile(currentSongItem.Text);
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="idx"></param>
-        private void playItem2(int idx)
-        {
-            if (idx >= listViewList.Items.Count)
-                idx = listViewList.Items.Count - 1;
-            if (idx < 0)
-                return;
-
-            var item = listViewList.Items[idx];
-            item.Selected = true;
-            item.EnsureVisible();
-            if (item.SubItems[1].Text.Equals("<dir>"))
-                return;
-            if (item.SubItems[0].Text.Contains("?"))
-                return;
-
-            playFile(currentSongItem.Text);
         }
 
         /// <summary>
@@ -566,6 +616,8 @@ namespace zanac.VGMPlayer
             toolStripStatusLabel.Text = text;
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -595,8 +647,9 @@ namespace zanac.VGMPlayer
 
                         dirStack.Clear();
                         sendCmd("sd dir", 1);
-
                         listingFiles(null);
+
+                        restoreCurrentDir();
                     }
                     catch (Exception ex)
                     {
@@ -608,6 +661,7 @@ namespace zanac.VGMPlayer
             }
             else
             {
+                storeCurrentDir();
                 dirStack.Clear();
 
                 try
@@ -622,7 +676,6 @@ namespace zanac.VGMPlayer
 
                 try
                 {
-                    serialPort?.Close();
                     serialPort?.Dispose();
                 }
                 catch (Exception ex)
@@ -635,6 +688,76 @@ namespace zanac.VGMPlayer
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        private void storeCurrentDir()
+        {
+            StringCollection sc = new StringCollection();
+            foreach (var d in dirStack.ToArray())
+                sc.Add(d);
+            Settings.Default.Dirs = sc;
+
+            if (currentSongItem != null)
+                Settings.Default.CurrentSong = currentSongItem.Text;
+            else
+                Settings.Default.CurrentSong = null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void restoreCurrentDir()
+        {
+            try
+            {
+                if (Settings.Default.Dirs != null)
+                {
+                    StringCollection sc = Settings.Default.Dirs;
+                    List<String> scl = new List<string>();
+                    foreach (var d in sc)
+                        scl.Add(d);
+                    try
+                    {
+                        listViewList.BeginUpdate();
+                        foreach (var d in scl.ToArray().Reverse())
+                        {
+                            sendCmd("cd " + d, 1);
+                            dirStack.Push(currentSongItem.Text);
+                            if (!listingFiles(null))
+                            {
+                                dirStack.Pop();
+                                return;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        listViewList.EndUpdate();
+                    }
+                }
+
+                if (Settings.Default.CurrentSong != null)
+                {
+                    foreach (ListViewItem i in listViewList.Items)
+                    {
+                        if (String.Equals(i.Text, Settings.Default.CurrentSong, StringComparison.OrdinalIgnoreCase))
+                        {
+                            i.Selected = true;
+                            i.EnsureVisible();
+                            break;
+                        }
+                    }
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selectDir"></param>
+        /// <returns></returns>
         private bool listingFiles(String selectDir)
         {
             List<ListViewItem> items = new List<ListViewItem>();
@@ -935,4 +1058,5 @@ namespace zanac.VGMPlayer
         MediaFastForward = 49,
         MediaRewind = 50
     }
+
 }

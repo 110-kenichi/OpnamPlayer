@@ -142,5 +142,28 @@ namespace OPNAMPlayer {
                 this["EnterDir"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentSong {
+            get {
+                return ((string)(this["CurrentSong"]));
+            }
+            set {
+                this["CurrentSong"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection Dirs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["Dirs"]));
+            }
+            set {
+                this["Dirs"] = value;
+            }
+        }
     }
 }
