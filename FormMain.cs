@@ -158,7 +158,6 @@ namespace zanac.VGMPlayer
                                     try
                                     {
                                         sendCmd("cd " + currentSongItem.Text, 1);
-
                                         dirStack.Push(currentSongItem.Text);
 
                                         if (!listingFiles(null))
@@ -723,7 +722,7 @@ namespace zanac.VGMPlayer
                         foreach (var d in scl.ToArray().Reverse())
                         {
                             sendCmd("cd " + d, 1);
-                            dirStack.Push(currentSongItem.Text);
+                            dirStack.Push(d);
                             if (!listingFiles(null))
                             {
                                 dirStack.Pop();
