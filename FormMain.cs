@@ -51,10 +51,18 @@ namespace zanac.VGMPlayer
         {
             base.OnClosed(e);
 
-            stopCurrentSong();
-            sendCmd("reset fm", 1);
-
-            serialPort?.Dispose();
+            try
+            {
+                stopCurrentSong();
+                sendCmd("reset fm", 1);
+            }
+            catch { }
+            try
+            {
+                serialPort?.Dispose();
+                serialPort?.Dispose();
+            }
+            catch { }
 
             storeSettings();
         }
@@ -275,15 +283,35 @@ namespace zanac.VGMPlayer
 
                         try
                         {
-                            sendCmd("cd " + item.Text, 1);
+                            bool popped = false;
+                            var ret = sendCmd("cd " + item.Text, 1);
 
                             String dir = null;
-                            if (item.Text.Equals("..") && dirStack.Count != 0)
-                                dir = dirStack.Pop();
+                            if (item.Text.Equals(".."))
+                            {
+                                if (dirStack.Count != 0)
+                                {
+                                    dir = dirStack.Pop();
+                                    popped = true;
+                                }
+                            }
                             else
+                            {
                                 dirStack.Push(item.Text);
+                            }
 
-                            listingFiles(dir);
+                            if (!listingFiles(dir))
+                            {
+                                if (item.Text.Equals(".."))
+                                {
+                                    if (popped)
+                                        dirStack.Push(dir);
+                                }
+                                else
+                                {
+                                    dirStack.Pop();
+                                }
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -563,6 +591,7 @@ namespace zanac.VGMPlayer
                             return;
 
                         sendCmd("reset fm", 1);
+                        setLight();
 
                         dirStack.Clear();
                         sendCmd("sd dir", 1);
@@ -571,6 +600,8 @@ namespace zanac.VGMPlayer
                     }
                     catch (Exception ex)
                     {
+                        serialPort?.Dispose();
+                        serialPort = null;
                         MessageBox.Show(ex.Message);
                     }
                 }
@@ -591,8 +622,8 @@ namespace zanac.VGMPlayer
 
                 try
                 {
-                    serialPort.Close();
-                    serialPort.Dispose();
+                    serialPort?.Close();
+                    serialPort?.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -604,68 +635,76 @@ namespace zanac.VGMPlayer
             }
         }
 
-        private void listingFiles(String selectDir)
+        private bool listingFiles(String selectDir)
         {
-            try
+            List<ListViewItem> items = new List<ListViewItem>();
+            String line = null;
+            do
             {
-                listViewList.Items.Clear();
-                listViewList.BeginUpdate();
-
-                String line = null;
-                do
+                try
                 {
-                    try
+                    line = serialPort.ReadLine();
+                    if (line != null && line.Length >= 46)
                     {
-                        line = serialPort.ReadLine();
-                        if (line != null && line.Length >= 46)
-                        {
-                            ListViewItem lvi = new ListViewItem(
-                                //FIRMWA~4.HEX    1141608  2024/05/25 23:14:00  FIRMWARE_263b.hex
-                                //0123456789
-                                //          0123456789
-                                //                    0123456789
-                                //                              0123456789
-                                //                                        0123456789
-                                new String[]
-                                {
+                        ListViewItem lvi = new ListViewItem(
+                            //FIRMWA~4.HEX    1141608  2024/05/25 23:14:00  FIRMWARE_263b.hex
+                            //0123456789
+                            //          0123456789
+                            //                    0123456789
+                            //                              0123456789
+                            //                                        0123456789
+                            new String[]
+                            {
                                     line.Substring(0, 8).Trim() + line.Substring(8, 4).Trim(),
                                     line.Substring(12, 11).Trim(),
                                     line.Substring(23, 21).Trim(),
                                     line.Substring(44, line.Length - 44).Trim()
-                                });
-                            if (String.Equals(lvi.Text, "."))
-                                continue;
+                            });
+                        if (String.Equals(lvi.Text, "."))
+                            continue;
 
-                            if (lvi.SubItems[1].Text.Equals("<dir>"))
+                        if (lvi.SubItems[1].Text.Equals("<dir>"))
+                        {
+                            if (selectDir != null && String.Equals(selectDir, lvi.Text))
                             {
-                                if (selectDir != null && String.Equals(selectDir, lvi.Text))
-                                {
-                                    lvi.Selected = true;
-                                }
-                                listViewList.Items.Add(lvi);
+                                lvi.Selected = true;
                             }
-                            else
+                            items.Add(lvi);
+                            //listViewList.Items.Add(lvi);
+                        }
+                        else
+                        {
+                            string ext = Path.GetExtension(lvi.Text);
+                            switch (ext.ToUpper())
                             {
-                                string ext = Path.GetExtension(lvi.Text);
-                                switch (ext.ToUpper())
-                                {
-                                    case ".MML":
-                                    case ".VGM":
-                                    case ".MDX":
-                                    case ".S98":
-                                        if (selectDir != null && String.Equals(selectDir, lvi.Text))
-                                            lvi.Selected = true;
-                                        listViewList.Items.Add(lvi);
-                                        break;
-                                }
+                                case ".MML":
+                                case ".VGM":
+                                case ".MDX":
+                                case ".S98":
+                                    if (selectDir != null && String.Equals(selectDir, lvi.Text))
+                                        lvi.Selected = true;
+                                    items.Add(lvi);
+                                    //listViewList.Items.Add(lvi);
+                                    break;
                             }
                         }
                     }
-                    catch (TimeoutException)
-                    {
-                        break;
-                    }
-                } while (line != null);
+                }
+                catch (TimeoutException)
+                {
+                    break;
+                }
+            } while (line != null);
+
+            if (items.Count == 0)
+                return false;
+
+            try
+            {
+                listViewList.BeginUpdate();
+
+                listViewList.Items.Clear();
+                listViewList.Items.AddRange(items.ToArray());
             }
             finally
             {
@@ -686,6 +725,8 @@ namespace zanac.VGMPlayer
                     listViewList.FocusedItem = listViewList.SelectedItems[0];
                 }
             }
+
+            return true;
         }
 
         private void comboBoxSerial_DropDown(object sender, EventArgs e)

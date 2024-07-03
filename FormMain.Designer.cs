@@ -120,27 +120,26 @@ namespace zanac.VGMPlayer
             // 
             // tableLayoutPanelButton
             // 
-            tableLayoutPanelButton.ColumnCount = 11;
+            tableLayoutPanelButton.ColumnCount = 9;
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.Controls.Add(buttonPrev, 0, 0);
             tableLayoutPanelButton.Controls.Add(buttonPlay, 1, 0);
             tableLayoutPanelButton.Controls.Add(buttonStop, 3, 0);
             tableLayoutPanelButton.Controls.Add(buttonNext, 2, 0);
-            tableLayoutPanelButton.Controls.Add(tableLayoutPanel3, 10, 0);
-            tableLayoutPanelButton.Controls.Add(checkBoxLoop, 8, 0);
-            tableLayoutPanelButton.Controls.Add(checkBoxTimer, 9, 0);
-            tableLayoutPanelButton.Controls.Add(dateTimePickerLoopTimes, 9, 1);
-            tableLayoutPanelButton.Controls.Add(numericUpDownLooped, 8, 1);
+            tableLayoutPanelButton.Controls.Add(tableLayoutPanel3, 8, 0);
+            tableLayoutPanelButton.Controls.Add(checkBoxLoop, 6, 0);
+            tableLayoutPanelButton.Controls.Add(checkBoxTimer, 7, 0);
+            tableLayoutPanelButton.Controls.Add(dateTimePickerLoopTimes, 7, 1);
+            tableLayoutPanelButton.Controls.Add(numericUpDownLooped, 6, 1);
             tableLayoutPanelButton.Controls.Add(checkBoxEnterDir, 2, 1);
             tableLayoutPanelButton.Dock = DockStyle.Bottom;
             tableLayoutPanelButton.Location = new Point(0, 701);
@@ -409,7 +408,7 @@ namespace zanac.VGMPlayer
             checkBoxEnterDir.Name = "checkBoxEnterDir";
             checkBoxEnterDir.Size = new Size(86, 27);
             checkBoxEnterDir.TabIndex = 9;
-            checkBoxEnterDir.Text = "Enter Dir";
+            checkBoxEnterDir.Text = "Enter &Dir";
             checkBoxEnterDir.UseVisualStyleBackColor = true;
             // 
             // labelPort
@@ -503,7 +502,7 @@ namespace zanac.VGMPlayer
             // toolStripStatusLabelSpace
             // 
             toolStripStatusLabelSpace.Name = "toolStripStatusLabelSpace";
-            toolStripStatusLabelSpace.Size = new Size(674, 17);
+            toolStripStatusLabelSpace.Size = new Size(705, 17);
             toolStripStatusLabelSpace.Spring = true;
             // 
             // toolStripStatusLabel2
@@ -633,7 +632,7 @@ namespace zanac.VGMPlayer
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FormMain";
-            Text = "OPNAM Player V1.4";
+            Text = "OPNAM Player V1.5";
             KeyDown += FormMain_KeyDown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
