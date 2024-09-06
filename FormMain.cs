@@ -74,6 +74,11 @@ namespace zanac.VGMPlayer
             storeSettings();
         }
 
+        private static int GET_APPCOMMAND_LPARAM(IntPtr lParam)
+        {
+            return (int)(lParam.ToInt64() >> 16) & 0xFFF;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -83,7 +88,7 @@ namespace zanac.VGMPlayer
             switch (m.Msg)
             {
                 case NativeConstants.WM_APPCOMMAND:
-                    int cmd = (int)((uint)m.LParam >> 16 & ~0xf000);
+                    int cmd = GET_APPCOMMAND_LPARAM(m.LParam);
                     switch ((ApplicationCommand)cmd)
                     {
                         case ApplicationCommand.MediaPlay:
@@ -792,7 +797,6 @@ namespace zanac.VGMPlayer
                                 lvi.Selected = true;
                             }
                             items.Add(lvi);
-                            //listViewList.Items.Add(lvi);
                         }
                         else
                         {
@@ -806,7 +810,6 @@ namespace zanac.VGMPlayer
                                     if (selectDir != null && String.Equals(selectDir, lvi.Text))
                                         lvi.Selected = true;
                                     items.Add(lvi);
-                                    //listViewList.Items.Add(lvi);
                                     break;
                             }
                         }

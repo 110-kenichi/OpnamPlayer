@@ -632,7 +632,7 @@ namespace zanac.VGMPlayer
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FormMain";
-            Text = "OPNAM Player V1.6";
+            Text = "OPNAM Player V1.7";
             KeyDown += FormMain_KeyDown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
