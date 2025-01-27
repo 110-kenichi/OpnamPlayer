@@ -417,6 +417,7 @@ namespace zanac.VGMPlayer
                     case ".VGM":
                     case ".MDX":
                     case ".S98":
+                    case ".XGM":
                         break;
                     default:
                         return;
@@ -657,6 +658,7 @@ namespace zanac.VGMPlayer
                     }
                     catch (Exception ex)
                     {
+                        buttonConnect.Text = "&Connect";
                         serialPort?.Dispose();
                         serialPort = null;
                         MessageBox.Show(ex.Message);
@@ -807,6 +809,7 @@ namespace zanac.VGMPlayer
                                 case ".VGM":
                                 case ".MDX":
                                 case ".S98":
+                                case ".XGM":
                                     if (selectDir != null && String.Equals(selectDir, lvi.Text))
                                         lvi.Selected = true;
                                     items.Add(lvi);
