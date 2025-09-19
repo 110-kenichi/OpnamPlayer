@@ -500,6 +500,25 @@ namespace zanac.VGMPlayer
             if (e.KeyCode == Keys.Enter)
             {
                 playSelectedItem(true);
+            }else if (e.KeyCode == Keys.Back)
+            {
+                try
+                {
+                    var ret = sendCmd("cd ..", 1);
+
+                    String dir = null;
+                    if (dirStack.Count != 0)
+                    {
+                        dir = dirStack.Pop();
+                        if (!listingFiles(dir))
+                            dirStack.Push(dir);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                return;
             }
         }
         private void listViewList_DoubleClick(object sender, EventArgs e)
@@ -1113,6 +1132,7 @@ namespace zanac.VGMPlayer
                 return;
             }
         }
+
     }
 
     internal static class NativeConstants
