@@ -43,12 +43,14 @@ namespace zanac.VGMPlayer
             buttonStop = new Button();
             buttonNext = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
+            buttonMute = new Button();
             comboBoxOpmClock = new ComboBox();
             comboBoxOpnaClock = new ComboBox();
             label1 = new Label();
             label2 = new Label();
             label4 = new Label();
             comboBoxLight = new ComboBox();
+            textBoxMute = new TextBox();
             checkBoxLoop = new CheckBox();
             checkBoxTimer = new CheckBox();
             dateTimePickerLoopTimes = new DateTimePicker();
@@ -130,7 +132,6 @@ namespace zanac.VGMPlayer
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelButton.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanelButton.Controls.Add(buttonPrev, 0, 0);
             tableLayoutPanelButton.Controls.Add(buttonPlay, 1, 0);
             tableLayoutPanelButton.Controls.Add(buttonStop, 3, 0);
@@ -142,14 +143,14 @@ namespace zanac.VGMPlayer
             tableLayoutPanelButton.Controls.Add(numericUpDownLooped, 6, 1);
             tableLayoutPanelButton.Controls.Add(checkBoxEnterDir, 2, 1);
             tableLayoutPanelButton.Dock = DockStyle.Bottom;
-            tableLayoutPanelButton.Location = new Point(0, 701);
+            tableLayoutPanelButton.Location = new Point(0, 405);
             tableLayoutPanelButton.Margin = new Padding(4);
             tableLayoutPanelButton.Name = "tableLayoutPanelButton";
             tableLayoutPanelButton.RowCount = 3;
             tableLayoutPanelButton.RowStyles.Add(new RowStyle(SizeType.Absolute, 55F));
             tableLayoutPanelButton.RowStyles.Add(new RowStyle());
-            tableLayoutPanelButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelButton.Size = new Size(787, 90);
+            tableLayoutPanelButton.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanelButton.Size = new Size(787, 99);
             tableLayoutPanelButton.TabIndex = 4;
             // 
             // buttonPrev
@@ -199,7 +200,7 @@ namespace zanac.VGMPlayer
             buttonPlay.Margin = new Padding(4);
             buttonPlay.Name = "buttonPlay";
             tableLayoutPanelButton.SetRowSpan(buttonPlay, 2);
-            buttonPlay.Size = new Size(108, 80);
+            buttonPlay.Size = new Size(108, 87);
             buttonPlay.TabIndex = 1;
             buttonPlay.TextAlign = ContentAlignment.BottomCenter;
             toolTip1.SetToolTip(buttonPlay, "Play/Pause");
@@ -263,12 +264,14 @@ namespace zanac.VGMPlayer
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.Controls.Add(buttonMute, 0, 2);
             tableLayoutPanel3.Controls.Add(comboBoxOpmClock, 1, 0);
             tableLayoutPanel3.Controls.Add(comboBoxOpnaClock, 1, 1);
             tableLayoutPanel3.Controls.Add(label1, 0, 0);
             tableLayoutPanel3.Controls.Add(label2, 0, 1);
             tableLayoutPanel3.Controls.Add(label4, 2, 0);
             tableLayoutPanel3.Controls.Add(comboBoxLight, 3, 0);
+            tableLayoutPanel3.Controls.Add(textBoxMute, 1, 2);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(500, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -276,9 +279,23 @@ namespace zanac.VGMPlayer
             tableLayoutPanelButton.SetRowSpan(tableLayoutPanel3, 2);
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel3.Size = new Size(284, 82);
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.Size = new Size(284, 89);
             tableLayoutPanel3.TabIndex = 4;
+            // 
+            // buttonMute
+            // 
+            buttonMute.AutoSize = true;
+            buttonMute.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonMute.Dock = DockStyle.Fill;
+            buttonMute.Location = new Point(3, 61);
+            buttonMute.Name = "buttonMute";
+            buttonMute.Size = new Size(82, 25);
+            buttonMute.TabIndex = 10;
+            buttonMute.Text = "M&ute";
+            toolTip1.SetToolTip(buttonMute, "Set mute channel as binary format.\r\ne.g.\r\n0 : mute off\r\n1 : mute 1ch\r\n11 : mute 1,2ch\r\n1001 : mute 1,4ch\r\n");
+            buttonMute.UseVisualStyleBackColor = true;
+            buttonMute.Click += buttonMute_Click;
             // 
             // comboBoxOpmClock
             // 
@@ -346,6 +363,20 @@ namespace zanac.VGMPlayer
             comboBoxLight.Size = new Size(64, 23);
             comboBoxLight.TabIndex = 5;
             // 
+            // textBoxMute
+            // 
+            textBoxMute.AutoCompleteMode = AutoCompleteMode.Suggest;
+            tableLayoutPanel3.SetColumnSpan(textBoxMute, 3);
+            textBoxMute.Dock = DockStyle.Fill;
+            textBoxMute.Location = new Point(91, 61);
+            textBoxMute.Name = "textBoxMute";
+            textBoxMute.Size = new Size(190, 23);
+            textBoxMute.TabIndex = 11;
+            textBoxMute.Text = "0";
+            toolTip1.SetToolTip(textBoxMute, "Set mute channel as binary format.\r\ne.g.\r\n0 : mute off\r\n1 : mute 1ch\r\n11 : mute 1,2ch\r\n1001 : mute 1,4ch");
+            textBoxMute.KeyDown += textBoxMute_KeyDown;
+            textBoxMute.KeyPress += textBoxMute_KeyPress;
+            // 
             // checkBoxLoop
             // 
             checkBoxLoop.AutoSize = true;
@@ -406,7 +437,7 @@ namespace zanac.VGMPlayer
             checkBoxEnterDir.Dock = DockStyle.Fill;
             checkBoxEnterDir.Location = new Point(165, 58);
             checkBoxEnterDir.Name = "checkBoxEnterDir";
-            checkBoxEnterDir.Size = new Size(86, 27);
+            checkBoxEnterDir.Size = new Size(86, 34);
             checkBoxEnterDir.TabIndex = 9;
             checkBoxEnterDir.Text = "Enter &Dir";
             checkBoxEnterDir.UseVisualStyleBackColor = true;
@@ -451,7 +482,7 @@ namespace zanac.VGMPlayer
             tableLayoutPanel2.Controls.Add(label7, 0, 0);
             tableLayoutPanel2.Controls.Add(textBoxTitle, 1, 0);
             tableLayoutPanel2.Dock = DockStyle.Bottom;
-            tableLayoutPanel2.Location = new Point(0, 669);
+            tableLayoutPanel2.Location = new Point(0, 373);
             tableLayoutPanel2.Margin = new Padding(4);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
@@ -487,7 +518,7 @@ namespace zanac.VGMPlayer
             // 
             statusStrip1.ImageScalingSize = new Size(20, 20);
             statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel, toolStripStatusLabelSpace, toolStripStatusLabel2, toolStripStatusLabelElapse });
-            statusStrip1.Location = new Point(0, 791);
+            statusStrip1.Location = new Point(0, 504);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Padding = new Padding(1, 0, 12, 0);
             statusStrip1.Size = new Size(787, 22);
@@ -531,7 +562,7 @@ namespace zanac.VGMPlayer
             listViewList.Location = new Point(0, 65);
             listViewList.MultiSelect = false;
             listViewList.Name = "listViewList";
-            listViewList.Size = new Size(787, 604);
+            listViewList.Size = new Size(787, 308);
             listViewList.TabIndex = 2;
             listViewList.UseCompatibleStateImageBehavior = false;
             listViewList.View = View.Details;
@@ -620,7 +651,7 @@ namespace zanac.VGMPlayer
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(787, 813);
+            ClientSize = new Size(787, 526);
             Controls.Add(listViewList);
             Controls.Add(tableLayoutPanel1);
             Controls.Add(tableLayoutPanel2);
@@ -632,7 +663,7 @@ namespace zanac.VGMPlayer
             MainMenuStrip = menuStrip1;
             Margin = new Padding(4);
             Name = "FormMain";
-            Text = "OPNAM Player V1.8";
+            Text = "OPNAM Player V1.9";
             KeyDown += FormMain_KeyDown;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
@@ -700,5 +731,7 @@ namespace zanac.VGMPlayer
         private CheckBox checkBoxEnterDir;
         private ToolStripStatusLabel toolStripStatusLabelSpace;
         private ToolStripStatusLabel toolStripStatusLabel2;
+        private Button buttonMute;
+        private TextBox textBoxMute;
     }
 }

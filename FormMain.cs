@@ -21,6 +21,11 @@ namespace zanac.VGMPlayer
 {
     public partial class FormMain : Form, IMessageFilter
     {
+        // オートコンプリートのソース
+        private AutoCompleteStringCollection autoCompleteSource = new AutoCompleteStringCollection();
+        // 記憶する入力履歴のリスト
+        private List<string> historyList = new List<string>();
+
         private SerialPort serialPort;
 
         private Stack<String> dirStack = new Stack<String>();
@@ -41,6 +46,9 @@ namespace zanac.VGMPlayer
             listingPortNames();
 
             restoreSettings();
+
+            textBoxMute.AutoCompleteSource = AutoCompleteSource.CustomSource;
+            textBoxMute.AutoCompleteCustomSource = autoCompleteSource;
         }
 
         protected override void OnCreateControl()
@@ -1026,7 +1034,8 @@ namespace zanac.VGMPlayer
                                         buttonNext_Click(null, null);
                                     }
                                 }
-                                catch { };
+                                catch { }
+                                ;
                             }
                         }
                     }
@@ -1039,6 +1048,69 @@ namespace zanac.VGMPlayer
             catch (TimeoutException)
             {
 
+            }
+        }
+
+        private void textBoxMute_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // 制御文字（バックスペースなど）は許可
+            if (char.IsControl(e.KeyChar))
+            {
+                return;
+            }
+
+            // 2進数として有効な文字（0, 1）のみを許可
+            if (e.KeyChar != '0' && e.KeyChar != '1')
+            {
+                e.Handled = true; // 入力をキャンセル
+            }
+        }
+
+        private void buttonMute_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrWhiteSpace(textBoxMute.Text))
+                return;
+            int intValue = Convert.ToInt32(textBoxMute.Text, 2);
+            string hexStringUpperCase = intValue.ToString("X");
+            sendCmd("mute direct " + hexStringUpperCase, 1);
+            addInputToHistory(textBoxMute.Text);
+        }
+
+        // 履歴を更新し、オートコンプリートのソースに反映するメソッド
+        private void updateAutoCompleteSource()
+        {
+            // 重複を排除
+            var uniqueHistory = historyList.Distinct().ToList();
+
+            // 履歴をクリア
+            autoCompleteSource.Clear();
+
+            // 履歴をオートコンプリートに追加
+            autoCompleteSource.AddRange(uniqueHistory.ToArray());
+        }
+
+        // 入力文字列を履歴に記憶し、リストの先頭に移動するメソッド
+        private void addInputToHistory(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input)) return;
+
+            // 既存の履歴から同じ文字列を削除
+            historyList.RemoveAll(h => h.Equals(input, StringComparison.OrdinalIgnoreCase));
+
+            // 新しい入力文字列をリストの先頭に追加
+            historyList.Insert(0, input);
+
+            // オートコンプリートのソースを更新
+            updateAutoCompleteSource();
+        }
+
+        private void textBoxMute_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                buttonMute_Click(null, null);
+                e.Handled = true;
+                return;
             }
         }
     }

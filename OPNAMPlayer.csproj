@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -12,12 +12,6 @@
 
   <ItemGroup>
     <Content Include="Resources\Icon.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="FTD2XX_NET">
-      <HintPath>FTD2XX_NET.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>
