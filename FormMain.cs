@@ -423,6 +423,7 @@ namespace zanac.VGMPlayer
                 {
                     case ".MML":
                     case ".VGM":
+                    case ".VGZ":
                     case ".MDX":
                     case ".S98":
                     case ".XGM":
@@ -834,6 +835,7 @@ namespace zanac.VGMPlayer
                             {
                                 case ".MML":
                                 case ".VGM":
+                                case ".VGZ":
                                 case ".MDX":
                                 case ".S98":
                                 case ".XGM":
